@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>הקישורים שלי</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&family=Alef:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:     #0a0a0f;
+      --bg-layer:    #12121a;
+      --bg-card:     #1a1a26;
+      --border:      #2d2d3d;
+      --text:        #e4e4ea;
+      --text-muted:  #8a8a9a;
+      --accent:      #00d9ff;
+      
+      /* Topic colors palette */
+      --topic-1: #ff6b9d;
+      --topic-2: #00d9ff;
+      --topic-3: #c471ed;
+      --topic-4: #feca57;
+      --topic-5: #48dbfb;
+      --topic-6: #ff9ff3;
+      --topic-7: #54a0ff;
+      --topic-8: #5f27cd;
+      --topic-9: #00d2d3;
+      --topic-10: #ff6348;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Alef', sans-serif;
+      min-height: 100vh;
+      padding: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated gradient background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(0,217,255,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255,107,157,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(196,113,237,0.05) 0%, transparent 60%);
+      animation: pulseGlow 8s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes pulseGlow {
+      0%   { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.1); }
+    }
+
+    #myShortcuts {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+    }
+
+    /* ══════════════════════════════════
+       HEADER
+    ══════════════════════════════════ */
+    .page-header {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-header h1 {
+      font-family: 'Rubik', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #00d9ff 0%, #ff6b9d 50%, #c471ed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      text-shadow: 0 0 60px rgba(0,217,255,0.3);
+    }
+
+    .page-header p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .add-topic-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent), #0099cc);
+      color: #0a0a0f;
+      border: none;
+      font-family: 'Rubik', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 14px 28px;
+      margin-top: 20px;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(0,217,255,0.3);
+    }
+    .add-topic-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,217,255,0.5);
+    }
+    .add-topic-btn:active { transform: translateY(0); }
+
+    /* ══════════════════════════════════
+       TOPICS GRID
+    ══════════════════════════════════ */
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+      animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ══════════════════════════════════
+       TOPIC CARD
+    ══════════════════════════════════ */
+    .topic-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: cardEntry 0.5s ease-out both;
+    }
+
+    @keyframes cardEntry {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .topic-section:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,217,255,0.15);
+    }
+
+    /* Glowing accent bar on left */
+    .topic-section::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--topic-color);
+      border-radius: 0 4px 4px 0;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    .topic-section:hover::before { opacity: 1; }
+
+    .topic-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .topic-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--topic-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .topic-title-text {
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .topic-title-text:hover { background: rgba(255,255,255,0.05); }
+
+    .topic-edit-input {
+      background: var(--bg-layer);
+      border: 2px solid var(--topic-color);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      outline: none;
+      flex: 1;
+      text-align: right;
+    }
+
+    .topic-icon {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 0 8px var(--topic-color));
+    }
+
+    .topic-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .icon-btn.danger:hover {
+      border-color: #ff6b6b;
+      color: #ff6b6b;
+      background: rgba(255,107,107,0.1);
+    }
+
+    /* ══════════════════════════════════
+       LINKS LIST
+    ══════════════════════════════════ */
+    .links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-layer);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 14px;
+      transition: all 0.2s ease;
+      animation: linkSlideIn 0.3s ease-out both;
+    }
+
+    @keyframes linkSlideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .link-item:hover {
+      background: var(--bg-dark);
+      border-color: var(--topic-color);
+      transform: translateX(-4px);
+    }
+
+    .link-drag-handle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      cursor: grab;
+      opacity: 0;
+      transition: opacity 0.2s;
+      user-select: none;
+    }
+    .link-item:hover .link-drag-handle { opacity: 1; }
+    .link-drag-handle:active { cursor: grabbing; }
+
+    .link-item.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .link-item.drag-over {
+      border-top: 2px solid var(--topic-color);
+    }
+
+    .topic-section.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .topic-section.drag-over {
+      border: 2px solid var(--accent);
+    }
+
+    .link-anchor {
+      flex: 1;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .link-anchor:hover {
+      color: var(--topic-color);
+      text-decoration: underline;
+    }
+
+    .link-delete {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 4px;
+      opacity: 0;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .link-item:hover .link-delete { opacity: 1; }
+    .link-delete:hover { color: #ff6b6b; }
+
+    /* ══════════════════════════════════
+       ADD LINK FORM
+    ══════════════════════════════════ */
+    .add-link-form {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+      background: var(--bg-layer);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-top: 12px;
+    }
+    .add-link-form.visible { display: flex; }
+
+    .add-link-form input {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Alef', sans-serif;
+      font-size: 0.9rem;
+      padding: 10px 12px;
+      outline: none;
+      text-align: right;
+      transition: border-color 0.2s;
+    }
+    .add-link-form input:focus { border-color: var(--accent); }
+    .add-link-form input::placeholder { color: var(--text-muted); }
+
+    .form-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .form-btn {
+      flex: 1;
+      border: none;
+      font-family: 'Rubik', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .form-btn.primary {
+      background: var(--topic-color);
+      color: #0a0a0f;
+    }
+    .form-btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--topic-color);
+    }
+    .form-btn.secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .form-btn.secondary:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    .add-link-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.85rem;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .add-link-trigger:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,217,255,0.05);
+    }
+
+    /* ══════════════════════════════════
+       EMPTY STATE
+    ══════════════════════════════════ */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+    .empty-state p {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    /* ══════════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════════ */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  </style>
+</head>
+<body>
+
+<div id="myShortcuts">
+  <div class="page-header">
+    <h1>הקישורים שלי</h1>
+    <p>ניהול מסודר של כל הקישורים החשובים שלך</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+      <button class="add-topic-btn" onclick="addNewTopic()">
+        <span>➕</span>
+        <span>הוסף נושא חדש</span>
+      </button>
+      <button class="add-topic-btn" onclick="exportData()" style="background:linear-gradient(135deg,#48dbfb,#0abde3);box-shadow:0 4px 20px rgba(72,219,251,0.3)">
+        <span>📥</span>
+        <span>ייצוא לקובץ</span>
+      </button>
+      <button class="add-topic-btn" onclick="document.getElementById('importFile').click()" style="background:linear-gradient(135deg,#feca57,#ee5a6f);box-shadow:0 4px 20px rgba(254,202,87,0.3)">
+        <span>📤</span>
+        <span>ייבוא מקובץ</span>
+      </button>
+      <button class="add-topic-btn" onclick="resetAllData()" style="background:linear-gradient(135deg,#ff6b6b,#c92a2a);box-shadow:0 4px 20px rgba(255,107,107,0.3)">
+        <span>🗑️</span>
+        <span>איפוס מלא</span>
+      </button>
+    </div>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+
+  <div class="topics-grid" id="topicsGrid"></div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-icon">🔖</div>
+    <p>עדיין אין נושאים</p>
+    <p style="font-size:0.9rem">לחץ על "הוסף נושא חדש" כדי להתחיל</p>
+  </div>
+</div>
+
+<script>
+  const TOPIC_COLORS = [
+    '#ff6b9d', '#00d9ff', '#c471ed', '#feca57', '#48dbfb',
+    '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff6348'
+  ];
+
+  const TOPIC_ICONS = [
+    '🚀', '💼', '🎨', '🎮', '📚', '🎵', '🏋️', '🍔', '✈️', '💻',
+    '📱', '🎬', '⚽', '🏠', '🛒', '💡', '📊', '🔧', '🌟', '🎯'
+  ];
+
+  let topics = [];
+  let nextTopicId = 1;
+  let nextLinkId = 1;
+
+  // ══════════════════════════════════
+  // EXPORT / IMPORT
+  // ══════════════════════════════════
+  function exportData() {
+    const data = {
+      topics,
+      nextTopicId,
+      nextLinkId,
+      exportDate: new Date().toISOString(),
+      version: '1.0'
+    };
+    
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `my-shortcuts-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert('הקובץ הורד בהצלחה! שמור אותו בענן (Google Drive, Dropbox וכו׳) כדי לגשת אליו ממכשירים אחרים.');
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        
+        // Validate data structure
+        if (!data.topics || !Array.isArray(data.topics)) {
+          throw new Error('Invalid file format');
+        }
+        
+        // Ask for confirmation
+        if (!confirm(`האם לטעון ${data.topics.length} נושאים מהקובץ? פעולה זו תחליף את כל הנתונים הקיימים.`)) {
+          return;
+        }
+        
+        // Load data
+        topics = data.topics;
+        nextTopicId = data.nextTopicId || 1;
+        nextLinkId = data.nextLinkId || 1;
+        
+        // Save and render
+        saveToLocalStorage();
+        render();
+        
+        alert('הנתונים נטענו בהצלחה! ✅');
+      } catch (error) {
+        alert('שגיאה בקריאת הקובץ. ודא שזה קובץ JSON תקין שיוצא מהמערכת.');
+        console.error('Import error:', error);
+      }
+      
+      // Reset file input
+      event.target.value = '';
+    };
+    
+    reader.readAsText(file);
+  }
+
+  // ══════════════════════════════════
+  // INITIALIZE WITH DEMO DATA
+  // ══════════════════════════════════
+  function resetAllData() {
+    if (!confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים? פעולה זו בלתי הפיכה!')) return;
+    
+    localStorage.removeItem('myShortcuts');
+    topics = [];
+    nextTopicId = 1;
+    nextLinkId = 1;
+    
+    render();
+    
+    alert('כל הנתונים נמחקו! רענן את הדף כדי להתחיל מחדש.');
+  }
+
+  function init() {
+    // Try to load from localStorage first
+    const saved = localStorage.getItem('myShortcuts');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        topics = data.topics || [];
+        nextTopicId = data.nextTopicId || 1;
+        nextLinkId = data.nextLinkId || 1;
+        
+        // If we successfully loaded data, render and exit
+        if (topics.length > 0) {
+          render();
+          return;
+        }
+      } catch (e) {
+        console.error('Failed to load saved data:', e);
+      }
+    }
+
+    // Only add demo data if localStorage is empty or invalid
+    const t1 = addTopic('עבודה', 0, '💼', false);
+    addLinkToTopic(t1, 'GitHub', 'https://github.com');
+    addLinkToTopic(t1, 'Gmail', 'https://mail.google.com');
+    addLinkToTopic(t1, 'Slack', 'https://slack.com');
+
+    const t2 = addTopic('למידה', 2, '📚', false);
+    addLinkToTopic(t2, 'Coursera', 'https://coursera.org');
+    addLinkToTopic(t2, 'Udemy', 'https://udemy.com');
+    addLinkToTopic(t2, 'YouTube', 'https://youtube.com');
+
+    const t3 = addTopic('כלים', 9, '🔧', false);
+    addLinkToTopic(t3, 'ChatGPT', 'https://chat.openai.com');
+    addLinkToTopic(t3, 'Figma', 'https://figma.com');
+    addLinkToTopic(t3, 'Notion', 'https://notion.so');
+
+    render();
+    saveToLocalStorage();
+  }
+
+  function saveToLocalStorage() {
+    try {
+      const data = {
+        topics,
+        nextTopicId,
+        nextLinkId
+      };
+      localStorage.setItem('myShortcuts', JSON.stringify(data));
+    } catch (e) {
+      console.error('Failed to save data:', e);
+    }
+  }
+
+  function addTopic(name, colorIdx, icon, shouldRender = true) {
+    const id = nextTopicId++;
+    topics.push({
+      id,
+      name,
+      colorIdx: colorIdx % TOPIC_COLORS.length,
+      icon,
+      links: []
+    });
+    if (shouldRender) {
+      render();
+      saveToLocalStorage();
+    }
+    return id;
+  }
+
+  function addLinkToTopic(topicId, title, url) {
+    const topic = topics.find(t => t.id === topicId);
+    if (!topic) return;
+    const linkId = nextLinkId++;
+    topic.links.push({ id: linkId, title, url });
+  }
+
+  function deleteTopic(topicId) {
+    if (!confirm('האם למחוק את הנושא וכל הקישורים שבו?')) return;
+    topics = topics.filter(t => t.id !== topicId);
+    render();
+    saveToLocalStorage();
+  }
+
+  function deleteLink(topicId, linkId) {
+    const topic = topics.find(t => t.id === topicId);
+    if (!topic) return;
+    topic.links = topic.links.filter(l => l.id !== linkId);
+    render();
+    saveToLocalStorage();
+  }
+
+  function addNewTopic() {
+    const name = prompt('שם הנושא החדש:');
+    if (!name || !name.trim()) return;
+    const colorIdx = Math.floor(Math.random() * TOPIC_COLORS.length);
+    const icon = TOPIC_ICONS[Math.floor(Math.random() * TOPIC_ICONS.length)];
+    addTopic(name.trim(), colorIdx, icon);
+  }
+
+  function startEditTopic(topicId) {
+    const topic = topics.find(t => t.id === topicId);
+    if (!topic) return;
+    
+    const titleEl = document.querySelector(`[data-topic-id="${topicId}"] .topic-title-text`);
+    if (!titleEl) return;
+
+    const input = document.createElement('input');
+    input.className = 'topic-edit-input';
+    input.value = topic.name;
+    input.style.color = TOPIC_COLORS[topic.colorIdx];
+
+    const commit = () => {
+      const newName = input.value.trim();
+      if (newName) topic.name = newName;
+      render();
+      saveToLocalStorage();
+    };
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter')  { e.preventDefault(); commit(); }
+      if (e.key === 'Escape') { render(); }
+    });
+    input.addEventListener('blur', commit);
+
+    titleEl.replaceWith(input);
+    input.focus();
+    input.select();
+  }
+
+  function toggleAddLinkForm(topicId) {
+    const form = document.querySelector(`[data-topic-id="${topicId}"] .add-link-form`);
+    if (!form) return;
+    form.classList.toggle('visible');
+    if (form.classList.contains('visible')) {
+      const titleInput = form.querySelector('.link-title-input');
+      if (titleInput) titleInput.focus();
+    }
+  }
+
+  function submitAddLink(topicId) {
+    const form = document.querySelector(`[data-topic-id="${topicId}"] .add-link-form`);
+    if (!form) return;
+
+    const titleInput = form.querySelector('.link-title-input');
+    const urlInput   = form.querySelector('.link-url-input');
+
+    const title = titleInput.value.trim();
+    const url   = urlInput.value.trim();
+
+    if (!title || !url) {
+      alert('נא למלא שם קישור וכתובת URL');
+      return;
+    }
+
+    addLinkToTopic(topicId, title, url);
+    titleInput.value = '';
+    urlInput.value   = '';
+    form.classList.remove('visible');
+    render();
+    saveToLocalStorage();
+  }
+
+  function render() {
+    const grid  = document.getElementById('topicsGrid');
+    const empty = document.getElementById('emptyState');
+
+    if (topics.length === 0) {
+      grid.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+
+    grid.style.display = 'grid';
+    empty.style.display = 'none';
+    grid.innerHTML = '';
+
+    topics.forEach((topic, idx) => {
+      const color = TOPIC_COLORS[topic.colorIdx];
+      const card = document.createElement('div');
+      card.className = 'topic-section';
+      card.dataset.topicId = topic.id;
+      card.style.setProperty('--topic-color', color);
+      card.style.animationDelay = `${idx * 0.08}s`;
+      
+      // Make topics draggable
+      card.draggable = true;
+      card.addEventListener('dragstart', handleTopicDragStart);
+      card.addEventListener('dragover', handleTopicDragOver);
+      card.addEventListener('drop', handleTopicDrop);
+      card.addEventListener('dragend', handleTopicDragEnd);
+
+      card.innerHTML = `
+        <div class="topic-header">
+          <div class="topic-title">
+            <span class="topic-icon">${topic.icon}</span>
+            <span class="topic-title-text" onclick="startEditTopic(${topic.id})">${escapeHtml(topic.name)}</span>
+          </div>
+          <div class="topic-actions">
+            <button class="icon-btn" onclick="startEditTopic(${topic.id})" title="ערוך שם">✎</button>
+            <button class="icon-btn danger" onclick="deleteTopic(${topic.id})" title="מחק נושא">🗑</button>
+          </div>
+        </div>
+
+        <ul class="links-list">
+          ${topic.links.map((link, linkIdx) => `
+            <li class="link-item" draggable="true" data-link-id="${link.id}" data-topic-id="${topic.id}" style="animation-delay:${linkIdx * 0.05}s">
+              <span class="link-drag-handle">⋮⋮</span>
+              <a href="${escapeAttr(link.url)}" target="_blank" rel="noopener noreferrer" class="link-anchor" title="${escapeAttr(link.url)}">
+                ${escapeHtml(link.title)}
+              </a>
+              <button class="link-delete" onclick="event.stopPropagation(); deleteLink(${topic.id}, ${link.id})" title="מחק קישור">✕</button>
+            </li>
+          `).join('')}
+        </ul>
+
+        <button class="add-link-trigger" onclick="toggleAddLinkForm(${topic.id})">
+          ➕ הוסף קישור
+        </button>
+
+        <div class="add-link-form">
+          <input type="text" class="link-title-input" placeholder="שם הקישור..." />
+          <input type="url" class="link-url-input" placeholder="https://..." />
+          <div class="form-actions">
+            <button class="form-btn primary" style="background:${color}" onclick="submitAddLink(${topic.id})">הוסף</button>
+            <button class="form-btn secondary" onclick="toggleAddLinkForm(${topic.id})">ביטול</button>
+          </div>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    // Add drag-and-drop event listeners to all link items
+    document.querySelectorAll('.link-item').forEach(item => {
+      item.addEventListener('dragstart', handleLinkDragStart);
+      item.addEventListener('dragover', handleLinkDragOver);
+      item.addEventListener('drop', handleLinkDrop);
+      item.addEventListener('dragend', handleLinkDragEnd);
+      item.addEventListener('dragleave', handleLinkDragLeave);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function escapeAttr(str) {
+    return String(str).replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  }
+
+  // ══════════════════════════════════
+  // DRAG AND DROP - LINKS
+  // ══════════════════════════════════
+  let draggedLink = null;
+  let draggedLinkTopicId = null;
+
+  function handleLinkDragStart(e) {
+    const item = e.target.closest('.link-item');
+    if (!item) return;
+    
+    draggedLink = parseInt(item.dataset.linkId);
+    draggedLinkTopicId = parseInt(item.dataset.topicId);
+    item.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleLinkDragOver(e) {
+    e.preventDefault();
+    const item = e.target.closest('.link-item');
+    if (!item || item.classList.contains('dragging')) return;
+    
+    item.classList.add('drag-over');
+    e.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleLinkDragLeave(e) {
+    const item = e.target.closest('.link-item');
+    if (!item) return;
+    item.classList.remove('drag-over');
+  }
+
+  function handleLinkDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const targetItem = e.target.closest('.link-item');
+    if (!targetItem || !draggedLink) return;
+    
+    const targetLinkId = parseInt(targetItem.dataset.linkId);
+    const targetTopicId = parseInt(targetItem.dataset.topicId);
+    
+    if (draggedLink === targetLinkId) return;
+    
+    // Find source and target topics
+    const sourceTopic = topics.find(t => t.id === draggedLinkTopicId);
+    const targetTopic = topics.find(t => t.id === targetTopicId);
+    
+    if (!sourceTopic || !targetTopic) return;
+    
+    // Find the dragged link
+    const linkIndex = sourceTopic.links.findIndex(l => l.id === draggedLink);
+    if (linkIndex === -1) return;
+    
+    const link = sourceTopic.links[linkIndex];
+    
+    // Remove from source
+    sourceTopic.links.splice(linkIndex, 1);
+    
+    // Find target position
+    const targetIndex = targetTopic.links.findIndex(l => l.id === targetLinkId);
+    
+    // Insert at target position
+    if (targetIndex !== -1) {
+      targetTopic.links.splice(targetIndex, 0, link);
+    } else {
+      targetTopic.links.push(link);
+    }
+    
+    render();
+    saveToLocalStorage();
+  }
+
+  function handleLinkDragEnd(e) {
+    const item = e.target.closest('.link-item');
+    if (item) {
+      item.classList.remove('dragging');
+      item.classList.remove('drag-over');
+    }
+    
+    // Clean up all drag-over classes
+    document.querySelectorAll('.link-item').forEach(el => {
+      el.classList.remove('drag-over');
+    });
+    
+    draggedLink = null;
+    draggedLinkTopicId = null;
+  }
+
+  // ══════════════════════════════════
+  // DRAG AND DROP - TOPICS
+  // ══════════════════════════════════
+  let draggedTopicId = null;
+
+  function handleTopicDragStart(e) {
+    const card = e.target.closest('.topic-section');
+    if (!card) return;
+    
+    draggedTopicId = parseInt(card.dataset.topicId);
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleTopicDragOver(e) {
+    e.preventDefault();
+    const card = e.target.closest('.topic-section');
+    if (!card || card.classList.contains('dragging')) return;
+    
+    card.classList.add('drag-over');
+    e.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleTopicDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const targetCard = e.target.closest('.topic-section');
+    if (!targetCard || !draggedTopicId) return;
+    
+    const targetTopicId = parseInt(targetCard.dataset.topicId);
+    if (draggedTopicId === targetTopicId) return;
+    
+    // Find indices
+    const draggedIdx = topics.findIndex(t => t.id === draggedTopicId);
+    const targetIdx = topics.findIndex(t => t.id === targetTopicId);
+    
+    if (draggedIdx === -1 || targetIdx === -1) return;
+    
+    // Reorder topics array
+    const [draggedTopic] = topics.splice(draggedIdx, 1);
+    topics.splice(targetIdx, 0, draggedTopic);
+    
+    render();
+    saveToLocalStorage();
+  }
+
+  function handleTopicDragEnd(e) {
+    const card = e.target.closest('.topic-section');
+    if (card) {
+      card.classList.remove('dragging');
+      card.classList.remove('drag-over');
+    }
+    
+    // Clean up all drag-over classes
+    document.querySelectorAll('.topic-section').forEach(el => {
+      el.classList.remove('drag-over');
+    });
+    
+    draggedTopicId = null;
+  }
+
+  // Initialize on load
+  init();
+</script>
+</body>
+</html>
